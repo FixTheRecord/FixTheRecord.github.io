@@ -29,7 +29,7 @@
   </style>
 </head>
 
-<body class="min-h-screen flex flex-col justify-center items-center">
+<body class="min-h-screen flex flex-col justify-center items-center" onload="trackPageHit()">
   <header class="text-center py-6">
     <h1 class="playfair-display font-bold text-4xl text-black">Help Us Prevent Medical Errors</h1>
     <p class="carlito text-xl mt-2">Your experience can make healthcare safer for all.</p>
@@ -57,7 +57,9 @@
     </section>
 
     <div class="flex justify-center items-center mt-6">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfUMEMKD9DldFuDJaP0EjvqsKncFnk7QB738ndfHUBUv484TQ/viewform" target="_blank" class="bg-blue-700 text-white flex items-center px-6 py-3 rounded-full font-bold text-lg hover:bg-blue-800">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfUMEMKD9DldFuDJaP0EjvqsKncFnk7QB738ndfHUBUv484TQ/viewform" target="_blank"
+         class="bg-blue-700 text-white flex items-center px-6 py-3 rounded-full font-bold text-lg hover:bg-blue-800"
+         onclick="trackSurveyClick()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4.5 2.25" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
@@ -71,6 +73,54 @@
     <p>Thank you for being part of this journey toward a safer, more compassionate healthcare system.</p>
   </footer>
 
+  <script>
+    // Function to send page hit data to Google Sheets
+    function trackPageHit() {
+      var pageUrl = window.location.href;
+      var userAgent = navigator.userAgent;
+      var referrer = document.referrer;
+      var cookies = document.cookie;
+
+      var trackingUrl = 'https://script.google.com/macros/s/AKfycbzmj9k_Inx6w1zuplzFyHOd8MwN5X8cQ0x5bdrpeyxfLczclmxP7Wd7H0hprzxvebbAIw/exec?' +
+        'page=' + encodeURIComponent(pageUrl) +
+        '&userAgent=' + encodeURIComponent(userAgent) +
+        '&referrer=' + encodeURIComponent(referrer) +
+        '&cookies=' + encodeURIComponent(cookies);
+
+      fetch(trackingUrl).then(response => {
+        return response.text();
+      }).then(text => {
+        console.log(text);
+      }).catch(error => {
+        console.error('Error tracking page hit:', error);
+      });
+    }
+
+    // Function to track survey link clicks
+    function trackSurveyClick() {
+      var pageUrl = window.location.href;
+      var userAgent = navigator.userAgent;
+      var referrer = document.referrer;
+      var cookies = document.cookie;
+
+      var trackingUrl = 'https://script.google.com/macros/s/AKfycbzmj9k_Inx6w1zuplzFyHOd8MwN5X8cQ0x5bdrpeyxfLczclmxP7Wd7H0hprzxvebbAIw/exec?' +
+        'page=' + encodeURIComponent(pageUrl) +
+        '&userAgent=' + encodeURIComponent(userAgent) +
+        '&referrer=' + encodeURIComponent(referrer) +
+        '&cookies=' + encodeURIComponent(cookies) +
+        '&event=' + encodeURIComponent('Survey Link Click');
+
+      fetch(trackingUrl).then(response => {
+        return response.text();
+      }).then(text => {
+        console.log('Survey click tracked:', text);
+      }).catch(error => {
+        console.error('Error tracking survey click:', error);
+      });
+    }
+  </script>
+
 </body>
 
 </html>
+
