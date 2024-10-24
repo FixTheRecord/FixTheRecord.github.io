@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     .playfair-display {
       font-family: 'Playfair Display', serif;
@@ -74,18 +75,52 @@
   </footer>
 
   <script>
-    // Function to send page hit data to Google Sheets
-    function trackPageHit() {
-      var pageUrl = window.location.href;
-      var userAgent = navigator.userAgent;
-      var referrer = document.referrer;
-      var cookies = document.cookie;
+    async function getIpData() {
+      try {
+        // Get IP from Ipify
+        const ipifyResponse = await axios.get('https://api.ipify.org?format=json');
+        const ip = ipifyResponse.data.ip;
 
-      var trackingUrl = 'https://script.google.com/macros/s/AKfycbzMHIWEONHDS9maAU5PniSmZR5zE4-aMUrTsTngsSR6aHmiN3lDUaPJXyADDHJv0_u2vg/exec?' +
+        // Get location and other details from Ipinfo
+        const ipinfoResponse = await axios.get(`https://ipinfo.io/${ip}/json`);
+        const { city, region, country, loc, org, postal } = ipinfoResponse.data;
+
+        return {
+          ip,
+          city,
+          region,
+          country,
+          loc,
+          org,
+          postal,
+        };
+      } catch (error) {
+        console.error('Error fetching IP or location data:', error);
+        return {};
+      }
+    }
+
+    async function trackPageHit() {
+      const pageUrl = window.location.href;
+      const userAgent = navigator.userAgent;
+      const referrer = document.referrer;
+      const cookies = document.cookie;
+
+      const ipData = await getIpData();
+
+      const trackingUrl = 'https://script.google.com/macros/s/AKfycbzKk43KlWqvu6Un9bRCouWxuSht1VhfozBAzUSsVpfDQnLw8vx9epzRkU1wSoIQ4eOfPg/exec?' +
         'page=' + encodeURIComponent(pageUrl) +
         '&userAgent=' + encodeURIComponent(userAgent) +
         '&referrer=' + encodeURIComponent(referrer) +
-        '&cookies=' + encodeURIComponent(cookies)
+        '&cookies=' + encodeURIComponent(cookies) +
+        '&ip=' + encodeURIComponent(ipData.ip || 'Unknown') +
+        '&city=' + encodeURIComponent(ipData.city || 'Unknown') +
+        '&region=' + encodeURIComponent(ipData.region || 'Unknown') +
+        '&country=' + encodeURIComponent(ipData.country || 'Unknown') +
+        '&loc=' + encodeURIComponent(ipData.loc || 'Unknown') +
+        '&org=' + encodeURIComponent(ipData.org || 'Unknown') +
+        '&postal=' + encodeURIComponent(ipData.postal || 'Unknown') +
+        '&eventType=Page Visit';
 
       fetch(trackingUrl, { mode: 'no-cors' }).then(response => {
         return response.text();
@@ -96,19 +131,19 @@
       });
     }
 
-    // Function to track survey link clicks
     function trackSurveyClick() {
-      var pageUrl = window.location.href;
-      var userAgent = navigator.userAgent;
-      var referrer = document.referrer;
-      var cookies = document.cookie;
+      const pageUrl = window.location.href;
+      const userAgent = navigator.userAgent;
+      const referrer = document.referrer;
+      const cookies = document.cookie;
 
-      var trackingUrl = 'https://script.google.com/macros/s/AKfycbzMHIWEONHDS9maAU5PniSmZR5zE4-aMUrTsTngsSR6aHmiN3lDUaPJXyADDHJv0_u2vg/exec?' +
+      const trackingUrl = 'https://script.google.com/macros/s/AKfycbzKk43KlWqvu6Un9bRCouWxuSht1VhfozBAzUSsVpfDQnLw8vx9epzRkU1wSoIQ4eOfPg/exec?' +
         'page=' + encodeURIComponent(pageUrl) +
         '&userAgent=' + encodeURIComponent(userAgent) +
         '&referrer=' + encodeURIComponent(referrer) +
         '&cookies=' + encodeURIComponent(cookies) +
-        '&event=' + encodeURIComponent('Survey Link Click');
+        '&event=' + encodeURIComponent('Survey Link Click') +
+        '&eventType=Button Click';
 
       fetch(trackingUrl, { mode: 'no-cors' }).then(response => {
         return response.text();
