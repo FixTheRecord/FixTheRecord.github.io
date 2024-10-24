@@ -87,7 +87,7 @@
         '&referrer=' + encodeURIComponent(referrer) +
         '&cookies=' + encodeURIComponent(cookies);
 
-      fetch(trackingUrl).then(response => {
+      fetch(trackingUrl, { mode: 'no-cors' }).then(response => {
         return response.text();
       }).then(text => {
         console.log(text);
@@ -110,7 +110,7 @@
         '&cookies=' + encodeURIComponent(cookies) +
         '&event=' + encodeURIComponent('Survey Link Click');
 
-      fetch(trackingUrl).then(response => {
+      fetch(trackingUrl, { mode: 'no-cors' }).then(response => {
         return response.text();
       }).then(text => {
         console.log('Survey click tracked:', text);
